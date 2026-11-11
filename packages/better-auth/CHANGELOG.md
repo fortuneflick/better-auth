@@ -1,5 +1,32 @@
 # better-auth
 
+## 1.7.21
+
+### Patch Changes
+
+- [#12392](https://github.com/better-auth/better-auth/pull/12392) [`a277020`](https://github.com/better-auth/better-auth/commit/a277020fa3f0f379e153d008daad64267dc39227) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - Fixed the device approval page showing a valid code as invalid when the same signed-in user looked it up twice at once, such as under React Strict Mode in development.
+
+- [#12401](https://github.com/better-auth/better-auth/pull/12401) [`c3a94c5`](https://github.com/better-auth/better-auth/commit/c3a94c546af3c3bf4573f254b666facb4a94fc2d) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - Generic OAuth providers configured with `authorizationHeaders` now send those headers when refreshing an access token, not only when exchanging the authorization code. Before, a provider whose token endpoint requires one of those headers accepted the sign-in but rejected every refresh. Providers without `authorizationHeaders` are unaffected.
+
+  `refreshAccessToken` and `refreshAccessTokenRequest` from `@better-auth/core/oauth2` accept an optional `headers` input for providers that need extra headers on refresh. Client authentication headers still take precedence over it.
+
+  Extra headers whose names differ only in case from a client authentication header, such as `Authorization` with `authentication: "basic"`, no longer produce a combined, invalid header on the code exchange or refresh. Client authentication replaces them.
+
+- [#12404](https://github.com/better-auth/better-auth/pull/12404) [`9b40ac6`](https://github.com/better-auth/better-auth/commit/9b40ac62af33d16952778bc3acfc0dc86d25a84a) Thanks [@bytaesu](https://github.com/bytaesu)! - Plugin packages no longer import from the `better-auth` root, so bundlers that split code stop emitting unused Kysely chunks when used with `better-auth/minimal`.
+
+- [#11912](https://github.com/better-auth/better-auth/pull/11912) [`5c12074`](https://github.com/better-auth/better-auth/commit/5c120747e4d5ab37f1fa71fee11653ade82739bc) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - If you use PostgreSQL and other schemas in the same database are dropped while Better Auth reads the database, for example one schema per tenant or parallel test runs, the startup schema check and `npx auth@latest migrate` no longer fail intermittently with `schema "…" does not exist` or `relation "…" does not exist`. Both now read only the schemas Better Auth uses: the schemas on the connection's `search_path`, plus any schema set with `schemaName` or a schema plugin. Before, they read every schema in the database. If no other schemas change while Better Auth reads the database, nothing changes for you.
+
+- [#12403](https://github.com/better-auth/better-auth/pull/12403) [`e64f624`](https://github.com/better-auth/better-auth/commit/e64f62427300a1fb6885c0ceb494818f77684a82) Thanks [@bytaesu](https://github.com/bytaesu)! - SIWE verification no longer includes the internal error message (for example a database error) in its 401 response. The original error is now logged on the server instead.
+
+- Updated dependencies [[`c3a94c5`](https://github.com/better-auth/better-auth/commit/c3a94c546af3c3bf4573f254b666facb4a94fc2d), [`5c12074`](https://github.com/better-auth/better-auth/commit/5c120747e4d5ab37f1fa71fee11653ade82739bc), [`b241ffc`](https://github.com/better-auth/better-auth/commit/b241ffc9404fa182fa60a2cf5c54765334729f4f), [`57fa843`](https://github.com/better-auth/better-auth/commit/57fa8432d89117e7a1ce49cdb7f194dbde0839e3), [`1a79da5`](https://github.com/better-auth/better-auth/commit/1a79da50672c8a7ccea89c93b11b25aea86262be), [`2d10ae7`](https://github.com/better-auth/better-auth/commit/2d10ae733eacab919ce13413ac9e840f2ea7f1c6)]:
+  - @better-auth/core@1.7.21
+  - @better-auth/kysely-adapter@1.7.21
+  - @better-auth/prisma-adapter@1.7.21
+  - @better-auth/drizzle-adapter@1.7.21
+  - @better-auth/memory-adapter@1.7.21
+  - @better-auth/mongo-adapter@1.7.21
+  - @better-auth/telemetry@1.7.21
+
 ## 1.7.20
 
 ### Patch Changes

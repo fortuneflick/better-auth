@@ -1,5 +1,19 @@
 # @better-auth/oauth-provider
 
+## 1.7.21
+
+### Patch Changes
+
+- [#12385](https://github.com/better-auth/better-auth/pull/12385) [`fd66861`](https://github.com/better-auth/better-auth/commit/fd66861c353574418a7bf48e0b79c0ebe4251c1c) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - Denying consent now redirects to the client only while the client is enabled and its `redirect_uri` is still valid. Before, a denial within the signed request lifetime still redirected to the `redirect_uri` after the client was disabled, the URI was removed from its registration, or `allowInsecureRedirectUri` or `validateRedirectUri` stopped accepting it. The user now sees the server error page instead.
+
+- [#12389](https://github.com/better-auth/better-auth/pull/12389) [`db930d9`](https://github.com/better-auth/better-auth/commit/db930d90115a1d6182bac83a3f010205d86baa3b) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - On databases that do not enforce foreign keys, such as the memory adapter and MongoDB, an opaque access token could stay valid after refresh token reuse or a replayed authorization code revoked its grant, if the token request was still issuing a refresh token. That request now fails with `invalid_grant`, and refresh token reuse revokes every access token in the family, even past 100 refresh tokens. JWT access tokens and opaque access tokens issued without a refresh token stay valid until they expire.
+
+- [#11911](https://github.com/better-auth/better-auth/pull/11911) [`900195d`](https://github.com/better-auth/better-auth/commit/900195df3f1313d84301f7b7dc4997845e568a8e) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - When a client sent the same refresh token twice at nearly the same time, one of the requests could fail with a 500 error. This happened when the second request arrived after the first had already rotated the token. The second request counts as refresh token reuse and revokes the token family, including the tokens the first request was still issuing, so the first request then failed on the database insert. Both requests now return `invalid_grant`, and the client must sign in again, as after any detected reuse. The same applies when an authorization code is redeemed twice at once.
+
+  Only opaque access tokens on databases that enforce foreign keys were affected. JWT access tokens, and duplicate refreshes inside `refreshTokenReuseInterval`, were not.
+
+- [#12409](https://github.com/better-auth/better-auth/pull/12409) [`9362c0d`](https://github.com/better-auth/better-auth/commit/9362c0d42e7f65a1dbfd6318360cd97ea9dd9d5b) Thanks [@bytaesu](https://github.com/bytaesu)! - Refresh tokens are issued correctly when `formatRefreshToken.encrypt` is async. Before, the client received `[object Promise]` in place of the token.
+
 ## 1.7.20
 
 ### Patch Changes

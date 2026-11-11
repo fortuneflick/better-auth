@@ -1,5 +1,19 @@
 # @better-auth/core
 
+## 1.7.21
+
+### Patch Changes
+
+- [#12401](https://github.com/better-auth/better-auth/pull/12401) [`c3a94c5`](https://github.com/better-auth/better-auth/commit/c3a94c546af3c3bf4573f254b666facb4a94fc2d) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - Generic OAuth providers configured with `authorizationHeaders` now send those headers when refreshing an access token, not only when exchanging the authorization code. Before, a provider whose token endpoint requires one of those headers accepted the sign-in but rejected every refresh. Providers without `authorizationHeaders` are unaffected.
+
+  `refreshAccessToken` and `refreshAccessTokenRequest` from `@better-auth/core/oauth2` accept an optional `headers` input for providers that need extra headers on refresh. Client authentication headers still take precedence over it.
+
+  Extra headers whose names differ only in case from a client authentication header, such as `Authorization` with `authentication: "basic"`, no longer produce a combined, invalid header on the code exchange or refresh. Client authentication replaces them.
+
+- [#11716](https://github.com/better-auth/better-auth/pull/11716) [`1a79da5`](https://github.com/better-auth/better-auth/commit/1a79da50672c8a7ccea89c93b11b25aea86262be) Thanks [@bytaesu](https://github.com/bytaesu)! - Authentication requests no longer hang on Cloudflare Workers when the request that started schema validation ends before validation finishes. On Workers, each request now runs its own schema lookup until one completes.
+
+- [#12402](https://github.com/better-auth/better-auth/pull/12402) [`2d10ae7`](https://github.com/better-auth/better-auth/commit/2d10ae733eacab919ce13413ac9e840f2ea7f1c6) Thanks [@gustavovalverde](https://github.com/gustavovalverde)! - With `advanced.database.generateId: "serial"`, filtering an `id` or reference field with `null` now compares it with `null`. Before, the `null` became `0`, so `eq null` matched no row and, on the memory adapter, `ne null` also matched rows where the field was unset.
+
 ## 1.7.20
 
 ### Patch Changes
